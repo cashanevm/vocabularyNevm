@@ -47,7 +47,7 @@ public class WordService {
          for(int i =0 ; i<4 ; i++){
 
              int random_number = 0 + (int) (Math.random() * wordRepository.findByStudied(false).stream().filter(x->x.getDate().getDay() != newDate.getDay()).count());
-             gameList.add(wordRepository.findByStudied(false).stream().filter(x->x.getDate().getDay() == newDate.getDay()).collect(Collectors.toList()).get(random_number));
+             gameList.add(wordRepository.findByStudied(false).stream().filter(x->x.getDate().getDay() != newDate.getDay()).collect(Collectors.toList()).get(random_number));
          }
         return gameList;
     }
