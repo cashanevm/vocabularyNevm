@@ -10,6 +10,14 @@
 <form th:action="@{/}">
   <input class="btn btn-outline-dark" type="submit" value="Home">
 </form>
+<form th:action="@{/word/add}">
+  <input class="btn btn-outline-dark" type="submit" value="Add new word">
+</form>
+<hr>
+<div>
+  <span th:each=" letter :${letters}"><a class="h2" th:href="'#' + ${letter}" th:text="${letter}"></a> ,</span>
+</div>
+
 <table  border="1" width="100%" >
   <tr>
     <th>Original</th>
@@ -18,7 +26,12 @@
     <th>Delete</th>
     <th>Edit</th>
   </tr>
-  <tr th:each=" word :${words}">
+  <div th:each=" letter :${letters}">
+  <tr>
+    <th colspan="5" ><a th:name="${letter}"></a><h1 th:text="${letter}"></h1></th>
+  </tr>
+
+  <tr th:each=" word :${words}" th:if="${#strings.startsWith(word.original,letter)}">
     <td th:text="${word.original}"></td>
     <td th:text="${word.translation}" ></td>
     <td th:text="${word.studied}" ></td>
@@ -35,10 +48,9 @@
       </form>
     </td>
   </tr>
+  </div>
 </table>
-<form th:action="@{/word/add}">
-  <input class="btn btn-outline-dark" type="submit" value="Add new word">
-</form>
+
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
 

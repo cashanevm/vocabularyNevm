@@ -10,6 +10,10 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.stream.Collectors;
+
 
 @Controller
 @RequestMapping("/word")
@@ -18,7 +22,9 @@ public class WordController {
     private WordService wordService;
     @GetMapping("/show")
     public String showWord(Model model){
-        model.addAttribute("words", wordService.getWords());
+        ArrayList<Word> wordList = (ArrayList<Word>) wordService.getWords().stream().sorted(Comparator.comparing(x -> x.getOriginal())).collect(Collectors.toList());
+        model.addAttribute("letters", wordService.getLetters(wordList));
+        model.addAttribute("words",wordList);
         return "info";
     }
     @GetMapping("/delete")

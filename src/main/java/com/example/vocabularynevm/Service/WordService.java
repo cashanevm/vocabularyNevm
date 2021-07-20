@@ -5,10 +5,7 @@ import com.example.vocabularynevm.Repository.WordRepository;
 import org.springframework.stereotype.Service;
 
 import javax.xml.crypto.Data;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.Iterator;
-import java.util.List;
+import java.util.*;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
@@ -50,6 +47,15 @@ public class WordService {
              gameList.add(wordRepository.findByStudied(false).stream().filter(x->x.getDate().getDay() != newDate.getDay()).collect(Collectors.toList()).get(random_number));
          }
         return gameList;
+    }
+    public ArrayList<String> getLetters(ArrayList<Word> wordList){
+        ArrayList<String> letterList = new ArrayList<>();
+        LinkedHashSet<String> letters = new LinkedHashSet<>();
+        wordList.stream().forEach((x)->{
+            letters.add(x.getOriginal().split("")[0]);
+        });
+        letters.stream().forEach(x->letterList.add(x));
+        return letterList;
     }
 
 }
