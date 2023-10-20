@@ -1,5 +1,6 @@
 package com.example.vocabularynevm.Service;
 
+import java.io.IOException;
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
@@ -43,10 +44,38 @@ public class WordApi {
                     .definitions(
                             getDefinitions(response)
                     )
+                    .examples(getExamples(word))
                     .build();
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
+    }
+
+    public List<String> getExamples(String word) throws IOException, InterruptedException {
+        HttpRequest request = HttpRequest.newBuilder()
+                .uri(URI.create("https://wordsapiv1.p.rapidapi.com/words/"+word+"/examples"))
+                .header("X-RapidAPI-Key", "63d7cd07a8msh4205b46472d440bp1e0e63jsn6c5d5cbac17d")
+                .header("X-RapidAPI-Host", "wordsapiv1.p.rapidapi.com")
+                .method("GET", HttpRequest.BodyPublishers.noBody())
+                .build();
+        HttpResponse<String> response = HttpClient.newHttpClient().send(request, HttpResponse.BodyHandlers.ofString());
+
+        JsonNode jsonNode = mapper.readTree(response.body());
+
+        jsonNode = jsonNode.findValue("examples");
+
+        ArrayList<String> strings = new ArrayList<>();
+
+
+        if (jsonNode != null && jsonNode.isArray()) {
+            for (JsonNode node:((ArrayNode) jsonNode)) {
+                strings.add(node.asText());
+            }
+        } else {
+            throw new RuntimeException();
+        }
+
+        return strings;
     }
 
     private List<WordDefinition> getDefinitions(String response) {

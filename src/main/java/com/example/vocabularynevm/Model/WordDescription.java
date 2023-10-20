@@ -16,5 +16,7 @@ public class WordDescription {
 
     private List<WordDefinition> definitions;
 
+    private List<String> examples;
+
     private String all;
 }

@@ -37,7 +37,13 @@
         <p th:each=" synonym :${definition.synonyms}">
             <span th:text="${synonym}"></span>
         </p>
+
+
     </div>
+
+    <ul th:each=" example :${wordInfo.description.examples}">
+        <li th:text="${example}"></li>
+    </ul>
 
     <input type="text" name="combo" th:value="${wordInfo.combo}">
     <input type="checkbox" name="studied" th:checked="${wordInfo.studied}">

@@ -37,12 +37,16 @@ public class WordService {
     public void init() {
 //        for (Word w : wordRepository.findAll()) {
 //            try {
-//                WordDescription description = wordApi.getDescription(w.getOriginal());
+//                WordDescription description = map(w).getWordDescription();
+//
+//                description.setExamples(wordApi.getExamples(w.getOriginal()));
+//
+//                System.out.printf("");
 //
 //                w.setDescription(objectMapper.writeValueAsString(description));
 //
 //                wordRepository.save(w);
-//            } catch (JsonProcessingException e) {
+//            } catch (Exception e) {
 //                log.error("error", e);
 //            }
 //        }
