@@ -1,10 +1,15 @@
 package com.example.vocabularynevm.Repository;
 
-import com.example.vocabularynevm.Entity.Word;
-import org.springframework.data.repository.CrudRepository;
-
 import java.util.List;
 
+import org.springframework.data.repository.CrudRepository;
+
+import com.example.vocabularynevm.Entity.Word;
+
 public interface WordRepository extends CrudRepository<Word, Long> {
-    public List<Word> findByStudied(Boolean bool);
+    List<Word> findByStudied(Boolean bool);
+
+    List<Word> findByStudiedAndOriginalNotIn(Boolean bool, List<String> originals);
+
+    List<Word> findByWriteStudied(Boolean bool);
 }

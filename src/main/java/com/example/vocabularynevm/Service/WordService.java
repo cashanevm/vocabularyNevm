@@ -1,61 +1,164 @@
 package com.example.vocabularynevm.Service;
 
-import com.example.vocabularynevm.Entity.Word;
-import com.example.vocabularynevm.Repository.WordRepository;
-import org.springframework.stereotype.Service;
-
-import javax.xml.crypto.Data;
-import java.util.*;
-import java.util.function.Supplier;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.stream.Collectors;
 
+import javax.annotation.PostConstruct;
+
+import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.example.vocabularynevm.Entity.Word;
+import com.example.vocabularynevm.Model.WordDescription;
+import com.example.vocabularynevm.Repository.WordRepository;
+
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+
 @Service
+@RequiredArgsConstructor
+@Slf4j
 public class WordService {
 
-    private final WordRepository wordRepository;
-    public WordService( WordRepository wordRepository){
-        this.wordRepository = wordRepository;
+    private final ObjectMapper objectMapper;
 
+    private final WordRepository wordRepository;
+
+    private final WordApi wordApi;
+
+    private final TranslatorApi translatorApi;
+
+    @PostConstruct
+    public void init() {
+//        for (Word w : wordRepository.findAll()) {
+//            try {
+//                WordDescription description = wordApi.getDescription(w.getOriginal());
+//
+//                w.setDescription(objectMapper.writeValueAsString(description));
+//
+//                wordRepository.save(w);
+//            } catch (JsonProcessingException e) {
+//                log.error("error", e);
+//            }
+//        }
     }
 
-    public void createWord(Word word){
+//    public static void main(String[] args) {
+//        wordApi.getDescription("gathering");
+//    }
+
+    public Word createWord(Word word) {
+        WordDescription description = wordApi.getDescription(word.getOriginal());
+
+        if (!StringUtils.hasText(word.getTranslation())) {
+            word.setTranslation(
+                    translatorApi.translate(word.getOriginal())
+            );
+        }
+
+        try {
+            word.setDescription(objectMapper.writeValueAsString(description));
+        } catch (JsonProcessingException e) {
+            log.error("error", e);
+        }
+
+       return map(wordRepository.save(word));
+    }
+
+    public void updateWord(Word word) {
+//        Word editedWord = wordRepository.findById(word.getId()).get();
+//        editedWord.setCombo(word.getCombo());
+//        editedWord.setOriginal(word.getOriginal());
+//        editedWord.setTranslation(word.getTranslation());
+//        editedWord.setStudied(word.isStudied());
         wordRepository.save(word);
     }
-    public void updateWord(Word word){
-        Word editedWord = wordRepository.findById(word.getId()).get();
-        editedWord.setCombo(word.getCombo());
-        editedWord.setOriginal(word.getOriginal());
-        editedWord.setTranslation(word.getTranslation());
-        editedWord.setStudied(word.isStudied());
-        wordRepository.save(editedWord);
-    }
-    public void deleteWord(Long id){
+
+    public void deleteWord(Long id) {
         wordRepository.deleteById(id);
     }
-    public ArrayList<Word> getWords(){
-        return (ArrayList<Word>) wordRepository.findAll();
+
+    public List<Word> getWords() {
+        return ((ArrayList<Word>) wordRepository.findAll()).stream().map(this::map).collect(Collectors.toList());
     }
-    public Word getWord(Long id){
-        return wordRepository.findById(id).get();
+
+    public Word getWord(Long id) {
+        return wordRepository.findById(id).map(this::map).get();
     }
-    public ArrayList<Word> getGame(){
+
+    public ArrayList<Word> getReadGame() {
         Date newDate = new Date();
         ArrayList<Word> gameList = new ArrayList<>();
-         for(int i =0 ; i<4 ; i++){
+        for (int i = 0; i < 4; i++) {
+            int random_number = (int) (Math.random() * getByStudiedAndOriginalNotIn(gameList).stream()
+                    // .filter(x -> x.getDate().getDay() != newDate.getDay())
+                    .count());
 
-             int random_number = 0 + (int) (Math.random() * wordRepository.findByStudied(false).stream().filter(x->x.getDate().getDay() != newDate.getDay()).count());
-             gameList.add(wordRepository.findByStudied(false).stream().filter(x->x.getDate().getDay() != newDate.getDay()).collect(Collectors.toList()).get(random_number));
-         }
+
+            gameList.add(
+                    getByStudiedAndOriginalNotIn(gameList)
+                            .stream()
+//                            .filter(x -> x.getDate().getDay() != newDate.getDay())
+                            .collect(Collectors.toList())
+                            .get(random_number)
+            );
+        }
+
         return gameList;
     }
-    public ArrayList<String> getLetters(ArrayList<Word> wordList){
+
+    private List<Word> getByStudiedAndOriginalNotIn(ArrayList<Word> gameList) {
+        if (gameList.isEmpty()) {
+            return wordRepository.findByStudied(
+                    false
+            ).stream().map(this::map).collect(Collectors.toList());
+        } else {
+            return wordRepository.findByStudiedAndOriginalNotIn(
+                    false,
+                    gameList.stream().map(Word::getOriginal).collect(Collectors.toList())
+            ).stream().map(this::map).collect(Collectors.toList());
+        }
+    }
+
+    public ArrayList<String> getLetters(ArrayList<Word> wordList) {
         ArrayList<String> letterList = new ArrayList<>();
         LinkedHashSet<String> letters = new LinkedHashSet<>();
-        wordList.stream().forEach((x)->{
+        wordList.stream().forEach((x) -> {
             letters.add(x.getOriginal().split("")[0]);
         });
-        letters.stream().forEach(x->letterList.add(x));
+        letters.stream().forEach(x -> letterList.add(x));
         return letterList;
     }
+
+    public Word getWriteGame() {
+        List<Word> byWriteStudied = wordRepository.findByWriteStudied(Boolean.FALSE);
+
+        int random_number = (int) (Math.random() * byWriteStudied.stream()
+                // .filter(x -> x.getDate().getDay() != newDate.getDay())
+                .count());
+
+        return byWriteStudied
+                .stream().map(this::map)
+//                            .filter(x -> x.getDate().getDay() != newDate.getDay())
+                .collect(Collectors.toList())
+                .get(random_number);
+
+    }
+
+    private Word map(Word word) {
+        try {
+            word.setWordDescription(objectMapper.readValue(word.getDescription(), WordDescription.class));
+        } catch (JsonProcessingException e) {
+            log.error("map", e);
+        }
+
+        return word;
+    }
+
 
 }

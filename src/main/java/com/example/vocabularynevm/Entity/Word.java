@@ -8,7 +8,12 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Transient;
+
 import java.util.Date;
+
+import com.fasterxml.jackson.databind.JsonNode;
+import com.example.vocabularynevm.Model.WordDescription;
 
 @Data
 @AllArgsConstructor
@@ -21,8 +26,16 @@ public class Word {
     private String original;
     private String translation;
     private int combo = 0;
+    private int writeCombo = 0;
     private boolean studied = false;
+    private boolean writeStudied = false;
     private Date date = new Date();
+    private Date writeDate = new Date();
+
+    private String description;
+
+    @Transient
+    private WordDescription wordDescription;
 
     public Word(String original, String translation) {
         this.original = original;
@@ -32,5 +45,4 @@ public class Word {
     public void setNewDate(){
         this.date = new Date();
     }
-
 }
