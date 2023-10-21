@@ -35,7 +35,7 @@
 
   <tr th:each=" word :${words}" th:if="${#strings.startsWith(word.original,letter)}">
     <td th:text="${word.original}"></td>
-    <td th:text="${word.wordDescription.pronunciation}"></td>
+    <td th:text="${word.description.pronunciation}"></td>
     <td th:text="${word.translation}" ></td>
     <td th:text="${word.studied}" ></td>
     <td>

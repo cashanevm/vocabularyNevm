@@ -8,8 +8,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import com.nevm.vocabulary.dao.persistence.entity.Word;
-import com.nevm.vocabulary.service.WordService;
+import com.nevm.vocabulary.service.WordServiceImpl;
+import com.nevm.vocabulary.service.model.Word;
 
 import lombok.RequiredArgsConstructor;
 
@@ -18,7 +18,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class WriteGameController {
 
-    private final WordService wordService;
+    private final WordServiceImpl wordService;
 
     @GetMapping("/")
     public String writeGame(Model model) {
@@ -32,11 +32,12 @@ public class WriteGameController {
     @GetMapping("/get")
     public String getResult(
             Model model,
-            @RequestParam(name = "id") String id,
+            @RequestParam(name = "id") Long id,
             @RequestParam(name = "right") String right,
             @RequestParam(name = "type") String type
     ) {
-        Word word = wordService.getWord(Long.parseLong(id));
+        Word word = wordService.getWord(id);
+
         model.addAttribute("word", word);
         if (right.equals(type)) {
             word.setWriteCombo(word.getWriteCombo() + 1);
@@ -51,7 +52,9 @@ public class WriteGameController {
             model.addAttribute("message", "Not right '" + type + "'! next time check better!");
             model.addAttribute("class", "alert alert-danger");
         }
+
         wordService.updateWord(word);
+
         return "write-right";
     }
 

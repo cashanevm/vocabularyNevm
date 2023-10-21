@@ -16,9 +16,9 @@
 <input type="text" name="original" th:value="${wordInfo.original}">
 <input type="text" name="translation" th:value="${wordInfo.translation}">
 
-<h1 th:text="${wordInfo.wordDescription.pronunciation}"></h1>
+<h1 th:text="${wordInfo.description.pronunciation}"></h1>
 
-<div th:each=" definition :${wordInfo.wordDescription.definitions}">
+<div th:each=" definition :${wordInfo.description.definitions}">
     <h2 th:text="${definition.definition}"></h2>
     <h3 th:text="${definition.partOfSpeech}"></h3>
 
@@ -27,27 +27,27 @@
     </p>
 </div>
 
-<input id="info" type="hidden" th:value="${wordInfo.description}">
+<!--<input id="info" type="hidden" th:value="${wordInfo.description}">-->
 
 <div>
     <h1>JSON Data:</h1>
     <pre id="json-display">j</pre>
 
-    <script>
-        // document.addEventListener("DOMContentLoaded", function () {
-        // Your JSON data as a string (example)
-        var jsonData = document.getElementById("info").value;
+<!--    <script>-->
+<!--        // document.addEventListener("DOMContentLoaded", function () {-->
+<!--        // Your JSON data as a string (example)-->
+<!--        var jsonData = document.getElementById("info").value;-->
 
-        // Select the <pre> element to display JSON data
-        var jsonDisplay = document.getElementById("json-display");
+<!--        // Select the <pre> element to display JSON data-->
+<!--        var jsonDisplay = document.getElementById("json-display");-->
 
-        var parsedData = JSON.parse(jsonData);
+<!--        var parsedData = JSON.parse(jsonData);-->
 
-        // Display the JSON string as is in the <pre> element
-        jsonDisplay.textContent = JSON.stringify(parsedData, null, 2);
-        ;
-        // });
-    </script>
+<!--        // Display the JSON string as is in the <pre> element-->
+<!--        jsonDisplay.textContent = JSON.stringify(parsedData, null, 2);-->
+<!--        ;-->
+<!--        // });-->
+<!--    </script>-->
 </div>
 
 

@@ -30,7 +30,7 @@
         <input name="translation"  th:value="${wordInfo.translation}" type="text" class="form-control" aria-label="Translation" aria-describedby="inputGroup-sizing-sm">
     </div>
 
-    <div th:each=" definition :${wordInfo.wordDescription.definitions}">
+    <div th:each=" definition :${wordInfo.description.definitions}">
         <h2 th:text="${definition.definition}"></h2>
         <h3 th:text="${definition.partOfSpeech}"></h3>
 
@@ -41,7 +41,7 @@
 
     </div>
 
-    <ul th:each=" example :${wordInfo.wordDescription.examples}">
+    <ul th:each=" example :${wordInfo.description.examples}">
         <li th:text="${example}"></li>
     </ul>
 

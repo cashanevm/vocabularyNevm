@@ -11,9 +11,9 @@
 <body>
 
 
-<h1 th:text="${word.wordDescription.pronunciation}"></h1>
+<h1 th:text="${word.description.pronunciation}"></h1>
 
-<div th:each=" definition :${word.wordDescription.definitions}">
+<div th:each=" definition :${word.description.definitions}">
     <h2 th:text="${definition.definition}"></h2>
     <h3 th:text="${definition.partOfSpeech}"></h3>
 
