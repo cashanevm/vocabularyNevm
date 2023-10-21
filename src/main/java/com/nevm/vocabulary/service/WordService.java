@@ -1,4 +1,4 @@
-package com.example.vocabularynevm.Service;
+package com.nevm.vocabulary.service;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -13,9 +13,11 @@ import org.springframework.util.StringUtils;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.example.vocabularynevm.Entity.Word;
-import com.example.vocabularynevm.Model.WordDescription;
-import com.example.vocabularynevm.Repository.WordRepository;
+import com.nevm.vocabulary.dao.persistence.entity.Word;
+import com.nevm.vocabulary.dao.api.model.WordDescription;
+import com.nevm.vocabulary.dao.persistence.repository.WordRepository;
+import com.nevm.vocabulary.dao.api.TranslatorApi;
+import com.nevm.vocabulary.dao.api.WordApi;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

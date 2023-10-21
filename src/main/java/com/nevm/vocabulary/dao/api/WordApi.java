@@ -1,4 +1,4 @@
-package com.example.vocabularynevm.Service;
+package com.nevm.vocabulary.dao.api;
 
 import java.io.IOException;
 import java.net.URI;
@@ -14,8 +14,9 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
-import com.example.vocabularynevm.Model.WordDefinition;
-import com.example.vocabularynevm.Model.WordDescription;
+import com.nevm.vocabulary.config.properties.RapidProperties;
+import com.nevm.vocabulary.dao.api.model.WordDefinition;
+import com.nevm.vocabulary.dao.api.model.WordDescription;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -27,11 +28,13 @@ public class WordApi {
 
     private final ObjectMapper mapper;
 
+    private final RapidProperties rapidProperties;
+
     public WordDescription getDescription(String word) {
         try {
             HttpRequest request = HttpRequest.newBuilder()
                     .uri(URI.create("https://wordsapiv1.p.rapidapi.com/words/" + word))
-                    .header("X-RapidAPI-Key", "63d7cd07a8msh4205b46472d440bp1e0e63jsn6c5d5cbac17d")
+                    .header("X-RapidAPI-Key", rapidProperties.getKey())
                     .header("X-RapidAPI-Host", "wordsapiv1.p.rapidapi.com")
                     .method("GET", HttpRequest.BodyPublishers.noBody())
                     .build();
@@ -54,7 +57,7 @@ public class WordApi {
     public List<String> getExamples(String word) throws IOException, InterruptedException {
         HttpRequest request = HttpRequest.newBuilder()
                 .uri(URI.create("https://wordsapiv1.p.rapidapi.com/words/"+word+"/examples"))
-                .header("X-RapidAPI-Key", "63d7cd07a8msh4205b46472d440bp1e0e63jsn6c5d5cbac17d")
+                .header("X-RapidAPI-Key", rapidProperties.getKey())
                 .header("X-RapidAPI-Host", "wordsapiv1.p.rapidapi.com")
                 .method("GET", HttpRequest.BodyPublishers.noBody())
                 .build();

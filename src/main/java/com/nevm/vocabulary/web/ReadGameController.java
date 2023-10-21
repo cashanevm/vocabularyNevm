@@ -1,4 +1,4 @@
-package com.example.vocabularynevm.Controller;
+package com.nevm.vocabulary.web;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -9,8 +9,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import com.example.vocabularynevm.Entity.Word;
-import com.example.vocabularynevm.Service.WordService;
+import com.nevm.vocabulary.dao.persistence.entity.Word;
+import com.nevm.vocabulary.service.WordService;
 
 import lombok.RequiredArgsConstructor;
 

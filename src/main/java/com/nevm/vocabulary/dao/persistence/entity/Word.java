@@ -1,4 +1,4 @@
-package com.example.vocabularynevm.Entity;
+package com.nevm.vocabulary.dao.persistence.entity;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -12,8 +12,7 @@ import javax.persistence.Transient;
 
 import java.util.Date;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.example.vocabularynevm.Model.WordDescription;
+import com.nevm.vocabulary.dao.api.model.WordDescription;
 
 @Data
 @AllArgsConstructor

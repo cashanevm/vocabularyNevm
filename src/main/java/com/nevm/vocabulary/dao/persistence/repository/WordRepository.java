@@ -1,10 +1,10 @@
-package com.example.vocabularynevm.Repository;
+package com.nevm.vocabulary.dao.persistence.repository;
 
 import java.util.List;
 
 import org.springframework.data.repository.CrudRepository;
 
-import com.example.vocabularynevm.Entity.Word;
+import com.nevm.vocabulary.dao.persistence.entity.Word;
 
 public interface WordRepository extends CrudRepository<Word, Long> {
     List<Word> findByStudied(Boolean bool);

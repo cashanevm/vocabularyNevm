@@ -1,4 +1,4 @@
-package com.example.vocabularynevm.Model;
+package com.nevm.vocabulary.dao.api.model;
 
 import java.util.List;
 

@@ -1,4 +1,4 @@
-package com.example.vocabularynevm.Service;
+package com.nevm.vocabulary.dao.api;
 
 import java.net.URI;
 import java.net.http.HttpClient;
@@ -10,6 +10,8 @@ import org.springframework.stereotype.Service;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import com.nevm.vocabulary.config.properties.RapidProperties;
+
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -20,13 +22,15 @@ public class TranslatorApi {
 
     private final ObjectMapper mapper;
 
+    private final RapidProperties rapidProperties;
+
     public String translate(String original) {
 
         try {
             HttpRequest request = HttpRequest.newBuilder()
                     .uri(URI.create("https://text-translator2.p.rapidapi.com/translate"))
                     .header("content-type", "application/x-www-form-urlencoded")
-                    .header("X-RapidAPI-Key", "63d7cd07a8msh4205b46472d440bp1e0e63jsn6c5d5cbac17d")
+                    .header("X-RapidAPI-Key", rapidProperties.getKey())
                     .header("X-RapidAPI-Host", "text-translator2.p.rapidapi.com")
                     .method("POST", HttpRequest.BodyPublishers.ofString("source_language=en&target_language=uk&text=" + original))
                     .build();
