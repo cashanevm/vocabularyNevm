@@ -1,6 +1,7 @@
 package com.nevm.vocabulary.web;
 
 import java.util.Date;
+import java.util.Optional;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -21,9 +22,11 @@ public class WriteGameController {
     private final WordServiceImpl wordService;
 
     @GetMapping("/")
-    public String writeGame(Model model) {
-
-        Word word = wordService.getWriteGame();
+    public String writeGame(
+            Model model,
+            @RequestParam(name = "id", required = false) Long id
+    ) {
+        Word word = getWriteGame(id);
         model.addAttribute("word", word);
 
         return "write-game";
@@ -58,5 +61,7 @@ public class WriteGameController {
         return "write-right";
     }
 
-
+    private Word getWriteGame(Long id) {
+        return Optional.ofNullable(id).map(wordService::getWord).orElse(wordService.getWriteGame());
+    }
 }

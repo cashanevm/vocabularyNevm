@@ -108,10 +108,12 @@ public class WordServiceImpl implements WordService {
         List<WordEntity> byWriteStudied = wordRepository.findByWriteStudied(Boolean.FALSE);
 
         int randomNumber = (int) (Math.random() * byWriteStudied.stream()
-                 .filter(x -> x.getDate().getDay() != new Date().getDay())
+                 .filter(x -> x.getWriteDate().getDay() != new Date().getDay())
                 .count());
 
-        return ServiceMapper.I.map(byWriteStudied.get(randomNumber));
+        return ServiceMapper.I.map(byWriteStudied.stream()
+                .filter(x -> x.getWriteDate().getDay() != new Date().getDay())
+                .collect(Collectors.toList()).get(randomNumber));
 
     }
 

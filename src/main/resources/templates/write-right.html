@@ -18,7 +18,11 @@
 <h2> <span th:text="${word.original}" > </span> = <span th:text="${word.translation}" ></span></h2>
 
 <form th:action="@{/game/write/}">
+    <input type="hidden" name="id" th:value="${word.id}">
     <input type="submit" class="btn btn-outline-dark" value="Try again">
+</form>
+<form th:action="@{/game/write/}">
+    <input type="submit" class="btn btn-outline-dark" value="Next">
 </form>
 <form th:action="@{/}">
     <input type="submit" class="btn btn-outline-dark" value="Home">

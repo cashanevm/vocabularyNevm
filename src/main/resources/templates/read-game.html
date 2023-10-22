@@ -9,8 +9,13 @@
 </head>
 <body>
 
+<div class="row justify-content-center">
+    <div>
+        <h1 th:text="${word.original}"></h1>
+        <input type="hidden" id="original" th:value="${word.original}">
+    </div>
+</div>
 
-<h1 th:text="${word.original}"></h1>
 <div class="container">
     <div class="row">
         <div th:each="one : ${words}" class="col">
@@ -24,7 +29,31 @@
     </div>
 </div>
 
+<script>
+    window.onload = (event) => {
+        extracted()
+    };
 
+    function extracted() {
+        const synth = window.speechSynthesis;
+        const utterance = new SpeechSynthesisUtterance(document.getElementById("original").value);
+
+        // Set the voice to a preferred native-sounding voice if available
+        const voices = synth.getVoices();
+
+        const nativeVoice = voices.find(voice => voice.name === "Aaron");
+        if (nativeVoice) {
+            utterance.voice = nativeVoice;
+        }
+
+        // Adjust the rate (speech speed), pitch, and volume
+        utterance.rate = 1.0;  // Adjust as needed, 1.0 is the default rate
+        utterance.pitch = 1.0; // Adjust as needed, 1.0 is the default pitch
+        utterance.volume = 1.0; // Adjust as needed, 1.0 is full volume
+
+        synth.speak(utterance);
+    }
+</script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
 
 </body>

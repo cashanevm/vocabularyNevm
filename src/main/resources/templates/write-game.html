@@ -11,15 +11,43 @@
 <body>
 
 
-<h1 th:text="${word.description.pronunciation}"></h1>
+<h4 class="m-4">Pronunciation</h4>
 
-<div th:each=" definition :${word.description.definitions}">
-    <h2 th:text="${definition.definition}"></h2>
-    <h3 th:text="${definition.partOfSpeech}"></h3>
+<div class="m-4">
+    <p th:text="${word.description.pronunciation}"></p>
+    <input type="hidden" id="original" th:value="${word.original}">
 
-    <p th:each=" synonym :${definition.synonyms}">
-        <span th:text="${synonym}"></span>
-    </p>
+    <button class="btn btn-primary" id="playButton">Play</button>
+</div>
+
+<h4 class="m-4">Definitions</h4>
+
+<div id="accordion" class="m-4">
+    <div class="card" th:each=" definition, iterStat :${word.description.definitions}">
+        <div class="card-header" th:id="'headingOne'+ ${iterStat.index}">
+            <h5 class="mb-0">
+                <button th:text="${definition.definition}" class="btn btn-link" data-toggle="collapse"
+                        th:data-target="'#collapseOne' + ${iterStat.index}" aria-expanded="fasle"
+                        aria-controls="collapseOne">
+                    ---
+                </button>
+            </h5>
+        </div>
+
+        <div th:id="'collapseOne' + ${iterStat.index}" class="collapse"
+             th:aria-labelledby="'headingOne'+ ${iterStat.index}" data-parent="#accordion">
+            <div class="card-body">
+                <h6>Part Of Speech</h6>
+                <p th:text="${definition.partOfSpeech}"></p>
+                <h6>Synonyms</h6>
+                <ul>
+                    <li th:each=" synonym :${definition.synonyms}">
+                        <span th:text="${synonym}"></span>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
 </div>
 
 
@@ -34,7 +62,35 @@
     </div>
 </div>
 
+<script>
+    document.getElementById("playButton").addEventListener("click", () => {
+        extracted();
+    });
 
+    window.onload = (event) => {
+        extracted()
+    };
+
+    function extracted() {
+        const synth = window.speechSynthesis;
+        const utterance = new SpeechSynthesisUtterance(document.getElementById("original").value);
+
+        // Set the voice to a preferred native-sounding voice if available
+        const voices = synth.getVoices();
+
+        const nativeVoice = voices.find(voice => voice.name === "Aaron");
+        if (nativeVoice) {
+            utterance.voice = nativeVoice;
+        }
+
+        // Adjust the rate (speech speed), pitch, and volume
+        utterance.rate = 1.0;  // Adjust as needed, 1.0 is the default rate
+        utterance.pitch = 1.0; // Adjust as needed, 1.0 is the default pitch
+        utterance.volume = 1.0; // Adjust as needed, 1.0 is full volume
+
+        synth.speak(utterance);
+    }
+</script>
 <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
         integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
         crossorigin="anonymous"></script>

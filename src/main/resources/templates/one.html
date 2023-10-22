@@ -4,53 +4,106 @@
     <meta charset="UTF-8">
     <title>Title</title>
     <link rel="shortcut icon" th:href="@{favicon.ico}" type="image/x-icon">
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css"
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css"
           integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
 
 </head>
 <body>
-<a href="/word/show">ok</a>
+
+<div class="row justify-content-center">
+    <a class="w-75 btn btn-primary m-4" href="/word/show">Back</a>
+</div>
 
 <input type="hidden" name="id" th:value="${wordInfo.id}">
 
-<input type="text" name="original" th:value="${wordInfo.original}">
-<input type="text" name="translation" th:value="${wordInfo.translation}">
+<h4 class="m-4">General</h4>
 
-<h1 th:text="${wordInfo.description.pronunciation}"></h1>
-
-<div th:each=" definition :${wordInfo.description.definitions}">
-    <h2 th:text="${definition.definition}"></h2>
-    <h3 th:text="${definition.partOfSpeech}"></h3>
-
-    <p th:each=" synonym :${definition.synonyms}">
-        <span th:text="${synonym}"></span>
-    </p>
+<div class="m-4">
+    <input id="original" type="text" name="original" th:value="${wordInfo.original}">
+    <input type="text" name="translation" th:value="${wordInfo.translation}">
 </div>
 
-<!--<input id="info" type="hidden" th:value="${wordInfo.description}">-->
+<h4 class="m-4">Pronunciation</h4>
+
+<div class="m-4">
+    <p th:text="${wordInfo.description.pronunciation}"></p>
+
+    <button class="btn btn-primary" id="playButton">Play</button>
+</div>
+
+
+<h4 class="m-4">Examples</h4>
+
+<ul class="list-group m-4">
+    <li class="list-group-item" th:each=" example :${wordInfo.description.examples}">
+        <span th:text="${example}"></span>
+    </li>
+</ul>
+
+<h4 class="m-4">Definitions</h4>
+
+<div id="accordion" class="m-4">
+    <div class="card" th:each=" definition, iterStat :${wordInfo.description.definitions}">
+        <div class="card-header" th:id="'headingOne'+ ${iterStat.index}">
+            <h5 class="mb-0">
+                <button th:text="${definition.definition}" class="btn btn-link" data-toggle="collapse"
+                        th:data-target="'#collapseOne' + ${iterStat.index}" aria-expanded="fasle"
+                        aria-controls="collapseOne">
+                    ---
+                </button>
+            </h5>
+        </div>
+
+        <div th:id="'collapseOne' + ${iterStat.index}" class="collapse"
+             th:aria-labelledby="'headingOne'+ ${iterStat.index}" data-parent="#accordion">
+            <div class="card-body">
+                <h6>Part Of Speech</h6>
+                <p th:text="${definition.partOfSpeech}"></p>
+                <h6>Synonyms</h6>
+                <ul>
+                    <li th:each=" synonym :${definition.synonyms}">
+                        <span th:text="${synonym}"></span>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
 
 <div>
-    <h1>JSON Data:</h1>
-    <pre id="json-display">j</pre>
-
-<!--    <script>-->
-<!--        // document.addEventListener("DOMContentLoaded", function () {-->
-<!--        // Your JSON data as a string (example)-->
-<!--        var jsonData = document.getElementById("info").value;-->
-
-<!--        // Select the <pre> element to display JSON data-->
-<!--        var jsonDisplay = document.getElementById("json-display");-->
-
-<!--        var parsedData = JSON.parse(jsonData);-->
-
-<!--        // Display the JSON string as is in the <pre> element-->
-<!--        jsonDisplay.textContent = JSON.stringify(parsedData, null, 2);-->
-<!--        ;-->
-<!--        // });-->
-<!--    </script>-->
+<div id="transcription">
+    <!-- Your transcription content will go here -->
 </div>
+</div>
+<script>
+    document.getElementById("playButton").addEventListener("click", () => {
+        extracted();
+    });
 
+    window.onload = (event) => {
+        extracted()
+    };
 
+    function extracted() {
+        const synth = window.speechSynthesis;
+        const utterance = new SpeechSynthesisUtterance(document.getElementById("original").value);
+
+        // Set the voice to a preferred native-sounding voice if available
+        const voices = synth.getVoices();
+
+        const nativeVoice = voices.find(voice => voice.name === "Aaron");
+        if (nativeVoice) {
+            utterance.voice = nativeVoice;
+        }
+
+        // Adjust the rate (speech speed), pitch, and volume
+        utterance.rate = 1.0;  // Adjust as needed, 1.0 is the default rate
+        utterance.pitch = 1.0; // Adjust as needed, 1.0 is the default pitch
+        utterance.volume = 1.0; // Adjust as needed, 1.0 is full volume
+
+        synth.speak(utterance);
+    }
+</script>
 <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
         integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
         crossorigin="anonymous"></script>
