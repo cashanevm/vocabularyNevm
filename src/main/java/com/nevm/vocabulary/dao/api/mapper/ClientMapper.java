@@ -57,7 +57,9 @@ public abstract class ClientMapper {
 
             JsonNode pronunciation = jsonNode.findValue("pronunciation");
 
-            if (pronunciation.isTextual()) {
+            if (pronunciation == null) {
+                return null;
+            } else if (pronunciation.isTextual()) {
                 return pronunciation.asText();
             } else if (pronunciation.isObject()) {
                 return pronunciation.findValue("all").asText();
@@ -95,7 +97,8 @@ public abstract class ClientMapper {
 
                 return result;
             } else {
-                log.error("definitions " + definitions);
+                log.error("definitions :" + definitions);
+                log.error("definitions r:" + response);
 
                 return null;
             }
